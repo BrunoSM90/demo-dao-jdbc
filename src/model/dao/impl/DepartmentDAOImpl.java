@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import db.DB;
+import db.DbException;
 import model.dao.IDepartmentDAO;
 import model.entities.Department;
 
@@ -39,20 +41,32 @@ public class DepartmentDAOImpl implements IDepartmentDAO {
 
 	@Override
 	public Department findById(Integer id) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
 		try {
-			PreparedStatement st = conn.prepareStatement("SELECT * from Department WHERE id = ?;");
+			Department department = null;
+			final String query = "SELECT * from Department WHERE id = ?;";
+			
+			st = conn.prepareStatement(query);
 			st.setInt(1, id);
-			ResultSet rs = st.executeQuery();
-			while (rs.next()) {
-				System.out.println("Id: " + rs.getInt(1) + "Name: " + rs.getString(2));
+			
+			rs = st.executeQuery();
+			if (rs.next()) {
+				Integer idDepartment = rs.getInt(1);
+				String name = rs.getString(2);
+				
+				department = new Department(idDepartment, name);
 			}
 			
+			return department;
 		} 
 		catch (SQLException e) {
-			e.printStackTrace();
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
 		}
-		
-		return null;
 	}
 
 	@Override

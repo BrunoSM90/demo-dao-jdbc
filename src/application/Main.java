@@ -1,7 +1,8 @@
 package application;
 
 import model.dao.DAOFactory;
-import model.dao.IDepartmentDAO;
+import model.dao.ISellerDAO;
+import model.entities.Seller;
 
 public class Main {
 
@@ -11,8 +12,12 @@ public class Main {
 //		
 //		Seller seller = new Seller(21, "Bob,", "bob@gmail.com", new Date(), 3000.00);
 //		System.out.println(seller);
-		IDepartmentDAO depDAO = DAOFactory.createDepartmentDAO();
-		depDAO.findById(1);
+//		IDepartmentDAO depDAO = DAOFactory.createDepartmentDAO();
+//		depDAO.findById(1);
+		
+		ISellerDAO sellerDAO = DAOFactory.createSellerDAO();
+		Seller seller = sellerDAO.findById(6);
+		System.out.println(seller);
 	}
 
 }
